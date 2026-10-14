@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: daily-planner
+    runtime: python
+    plan: starter            # бесплатный тариф засыпает и не поддерживает диск
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: BOT_TOKEN
+        sync: false          # Render спросит значение при создании
+      - key: TIMEZONE
+        value: Asia/Novokuznetsk
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:////data/planner.db
+    disk:
+      name: planner-data
+      mountPath: /data
+      sizeGB: 1
